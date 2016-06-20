@@ -11,7 +11,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Twisted>=8.0',
-    'Click>=6.0',
+    'Scrapy>=0.17',
 ]
 
 test_requirements = [
@@ -36,6 +36,7 @@ setup(
             'flowder=flowder.cli:main'
         ]
     },
+    scripts=['bin/flowder'],
     include_package_data=True,
     install_requires=requirements,
     dependency_links=[

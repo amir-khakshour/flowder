@@ -8,7 +8,7 @@ from twisted.application.internet import TimerService, TCPServer, UDPServer
 
 from flowder.signal import SignalManager
 from flowder.interfaces import ISignalManager
-
+from flowder.services.fetcher import FetcherService
 
 def application(config):
     app = Application("Flowder")
@@ -24,6 +24,10 @@ def application(config):
 
     signalmanager = SignalManager()
     app.setComponent(ISignalManager, signalmanager)
+
+    # add Fetcher service
+    fetcher = FetcherService(config)
+    fetcher.setServiceParent(app)
 
     log.msg("Starting Flowder services (;-)")
 

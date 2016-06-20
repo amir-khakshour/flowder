@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+from twisted.scripts.twistd import run
+from os.path import join, dirname
+from sys import argv
+import flowder
 
-import click
 
-@click.command()
-def main(args=None):
-    """Console script for flowder"""
-    click.echo("Replace this message by putting your code into "
-                "flowder.cli.main")
-    click.echo("See click documentation at http://click.pocoo.org/")
+def main():
+    argv[1:1] = ['-n', '-y', join(dirname(flowder.__file__), 'txapp.py')]
+    run()
 
 
 if __name__ == "__main__":
