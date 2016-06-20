@@ -15,7 +15,7 @@ requirements = [
 ]
 
 test_requirements = [
-    # TODO: put package test requirements here
+    'nose',
 ]
 
 setup(
@@ -38,6 +38,9 @@ setup(
     },
     include_package_data=True,
     install_requires=requirements,
+    dependency_links=[
+        "git+ssh://git@github.com/amir-khakshour/pygear",
+    ],
     license="MIT license",
     zip_safe=False,
     keywords='flowder',
@@ -52,6 +55,6 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    test_suite='tests',
+    test_suite='nose.collector',
     tests_require=test_requirements
 )
