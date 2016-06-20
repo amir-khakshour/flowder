@@ -10,12 +10,9 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'Twisted>=8.0',
-    'Scrapy>=0.17',
 ]
 
 test_requirements = [
-    'nose',
 ]
 
 setup(
@@ -56,6 +53,6 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    test_suite='nose.collector',
+    test_suite='tests',
     tests_require=test_requirements
 )

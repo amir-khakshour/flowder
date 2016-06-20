@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from pkg_resources import resource_string
 from pygear.system.loading import load_object
-from flowder.config import FlowderConfig
+from .config import FlowderConfig
 
 
 __name__ = 'flowder'

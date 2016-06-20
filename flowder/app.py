@@ -6,9 +6,9 @@ from twisted.python.log import ILogObserver
 from twisted.application.internet import TimerService, TCPServer, UDPServer
 
 
-from flowder.signal import SignalManager
-from flowder.interfaces import ISignalManager
-from flowder.services.fetcher import FetcherService
+from .signal import SignalManager
+from .interfaces import ISignalManager
+from .services.fetcher import FetcherService
 
 def application(config):
     app = Application("Flowder")
