@@ -6,9 +6,12 @@ from twisted.python.log import ILogObserver
 from twisted.application.internet import TimerService, TCPServer, UDPServer
 
 
-from .signal import SignalManager
 from .interfaces import ISignalManager
+from .services.signal import SignalManager
+from .services.poller import QueuePoller
 from .services.fetcher import FetcherService
+from .services.storage import FileDownloaderTaskStorage
+
 
 def application(config):
     app = Application("Flowder")
@@ -25,9 +28,18 @@ def application(config):
     signalmanager = SignalManager()
     app.setComponent(ISignalManager, signalmanager)
 
-    # add Fetcher service
+    # Fetcher service
     fetcher = FetcherService(config)
     fetcher.setServiceParent(app)
+
+    # Queue Poller Service
+    poller = QueuePoller(app, poll_size)
+    poller.setServiceParent(app)
+
+    # Task Storage
+    db_file = '%s.db' % db_file
+    taskStorage = FileDownloaderTaskStorage(app, db_file)
+    taskStorage.setServiceParent(app)
 
     log.msg("Starting Flowder services (;-)")
 
