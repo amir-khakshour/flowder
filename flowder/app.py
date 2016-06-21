@@ -11,6 +11,7 @@ from .services.signal import SignalManager
 from .services.poller import QueuePoller
 from .services.fetcher import FetcherService
 from .services.storage import FileDownloaderTaskStorage
+from .services.scheduler import TaskScheduler
 
 
 def application(config):
@@ -38,8 +39,15 @@ def application(config):
 
     # Task Storage
     db_file = '%s.db' % db_file
-    taskStorage = FileDownloaderTaskStorage(app, db_file)
-    taskStorage.setServiceParent(app)
+    task_storage = FileDownloaderTaskStorage(app, db_file)
+    task_storage.setServiceParent(app)
+
+    timer = TimerService(poll_interval, poller.poll)
+    timer.setServiceParent(app)
+
+    # Scheduler
+    scheduler = TaskScheduler(config, app)
+    scheduler.setServiceParent(app)
 
     log.msg("Starting Flowder services (;-)")
 

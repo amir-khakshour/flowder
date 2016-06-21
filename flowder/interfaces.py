@@ -52,3 +52,17 @@ class ITaskStorage(Interface):
 
     def pop():
         """Pop a message from storage and return it"""
+
+
+class IScheduler(Interface):
+    """A component to schedule task runs"""
+
+    def schedule():
+        """Schedule a run for a given task"""
+
+    def list_tasks():
+        """Return the list of available tasks"""
+
+    def update_tasks():
+        """Called when tasks may have changed, to refresh the available
+        tasks"""
