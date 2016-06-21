@@ -2,11 +2,12 @@
 from twisted.application.service import Application
 from twisted.python import log
 from twisted.web import server
-from twisted.python.log import ILogObserver
 from twisted.application.internet import TimerService, TCPServer, UDPServer
 
+from pygear.system.loading import load_object
+from pygear.twisted.interfaces import ISignalManager
 
-from .interfaces import ISignalManager
+from .services.website import Root
 from .services.signal import SignalManager
 from .services.poller import QueuePoller
 from .services.fetcher import FetcherService
@@ -29,15 +30,12 @@ def application(config):
     signalmanager = SignalManager()
     app.setComponent(ISignalManager, signalmanager)
 
-    # Fetcher service
     fetcher = FetcherService(config)
     fetcher.setServiceParent(app)
 
-    # Queue Poller Service
     poller = QueuePoller(app, poll_size)
     poller.setServiceParent(app)
 
-    # Task Storage
     db_file = '%s.db' % db_file
     task_storage = FileDownloaderTaskStorage(app, db_file)
     task_storage.setServiceParent(app)
@@ -45,9 +43,17 @@ def application(config):
     timer = TimerService(poll_interval, poller.poll)
     timer.setServiceParent(app)
 
-    # Scheduler
     scheduler = TaskScheduler(config, app)
     scheduler.setServiceParent(app)
+
+    laupath = config.get('launcher', 'flowder.launcher.Launcher')
+    laucls = load_object(laupath)
+    launcher = laucls(app, config)
+    launcher.setServiceParent(app)
+
+    # @TODO use AMQP protocol for gettings requests.
+    restService = TCPServer(rest_port, server.Site(Root(app, config)), interface=rest_bind)
+    restService.setServiceParent(app)
 
     log.msg("Starting Flowder services (;-)")
 

@@ -11,5 +11,6 @@ PyYAML==3.11
 pytest==2.9.2
 Twisted>=8.0
 Scrapy>=0.17
+netifaces>=0.10
 # pygear
 -e git+https://github.com/amir-khakshour/pygear.git#egg=pygear
