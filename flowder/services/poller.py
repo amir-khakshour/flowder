@@ -4,15 +4,14 @@ from twisted.application import service
 from twisted.internet.defer import DeferredQueue, inlineCallbacks, maybeDeferred, returnValue
 
 from pygear.logging import log
+from pygear.twisted.signal import get_signal_manager
 
 from flowder import signals
-from flowder.signal import get_signal_manager
 from flowder.interfaces import IPoller
 
 
 @implementer(IPoller)
 class QueuePoller(service.Service):
-
     name = 'poller'
 
     def __init__(self, app, poll_size=5):
@@ -24,7 +23,6 @@ class QueuePoller(service.Service):
         log.msg("Start pooler ...")
         IApp = service.IServiceCollection(self.app, self.app)
         self.task_storage = IApp.getServiceNamed('task_storage')
-
         self.signal_manager = get_signal_manager(self.app)
         self.signal_manager.connect(self.update_tasks, signal=signals.tasks_updated)
 
@@ -32,8 +30,8 @@ class QueuePoller(service.Service):
 
     @inlineCallbacks
     def poll(self):
-        if self.dq.pending or\
-                not self.task_storage or\
+        if self.dq.pending or \
+                not self.task_storage or \
                 not self.task_storage.ready:
             return
         c = yield maybeDeferred(self.task_storage.count)

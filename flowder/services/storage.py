@@ -78,13 +78,10 @@ class FileDownloaderTaskStorage(service.Service):
         q = "insert into %s (job_id, status, " \
             "fetch_uri, settings, " \
             "created, updated) values (?,?,?,?,?,?)" % self.table
-        c = self.conn.execute(q, args)
+        self.conn.execute(q, args)
         self.commit()
-
-        if c.rowcount:
-            self.commit()
-            self._update_tasks()
-            self.signal_manager.send_catch_log(signal=signals.tasks_updated, job_id=job_id, task_info=task_info)
+        self._update_tasks()
+        self.signal_manager.send_catch_log(signal=signals.tasks_updated, job_id=job_id, task_info=task_info)
 
     def commit(self):
         try:
@@ -111,7 +108,7 @@ class FileDownloaderTaskStorage(service.Service):
         return len(self)
 
     def _update_tasks(self):
-        self.tasks = [i for i in self._tasks()]
+        self.tasks = (i for i in self._tasks())
 
     def __len__(self):
         q = "select count(*) from %s" % self.table

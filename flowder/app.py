@@ -6,13 +6,14 @@ from twisted.application.internet import TimerService, TCPServer, UDPServer
 
 from pygear.system.loading import load_object
 from pygear.twisted.interfaces import ISignalManager
+from pygear.twisted.signal import SignalManager
 
 from .services.website import Root
-from .services.signal import SignalManager
 from .services.poller import QueuePoller
 from .services.fetcher import FetcherService
 from .services.storage import FileDownloaderTaskStorage
 from .services.scheduler import TaskScheduler
+from .services.amqp import AmqpService
 
 
 def application(config):
@@ -51,9 +52,11 @@ def application(config):
     launcher = laucls(app, config)
     launcher.setServiceParent(app)
 
-    # @TODO use AMQP protocol for gettings requests.
     restService = TCPServer(rest_port, server.Site(Root(app, config)), interface=rest_bind)
     restService.setServiceParent(app)
+
+    amqp_publisher = AmqpService(app, config)
+    amqp_publisher.setServiceParent(app)
 
     log.msg("Starting Flowder services (;-)")
 

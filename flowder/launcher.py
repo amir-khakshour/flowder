@@ -10,7 +10,7 @@ from twisted.web._newclient import ResponseNeverReceived, ResponseFailed
 from twisted.internet.error import TimeoutError, ConnectionRefusedError
 
 from pygear.logging import log
-from pygear.core.python import stringify_dict
+from pygear.text.encoding import stringify_dict
 from pygear.twisted.reactor import CallLaterOnce
 from pygear.system.magic import get_buffer_extension
 from pygear.core.six.moves.urllib.parse import urlparse

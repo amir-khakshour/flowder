@@ -1,11 +1,12 @@
 from zope.interface import implementer
 from twisted.application import service
 
-from flowder.signal import get_signal_manager
+from pygear.twisted.signal import get_signal_manager
 from pygear.logging import log
 
 from flowder import signals
 from flowder.interfaces import IScheduler
+
 
 @implementer(IScheduler)
 class TaskScheduler(service.Service):

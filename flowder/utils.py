@@ -6,7 +6,7 @@ from twisted.internet import defer
 from twisted.names import client
 
 from pygear.logging import log
-from pygear.core.six.moves.urllib.parse import urlparse
+from pygear.core.six.moves.urllib.parse import urlparse, urljoin
 
 from .interfaces import ITaskStorage
 
@@ -53,7 +53,7 @@ def parse_clients_list(file_path):
                 _ip = _host
             else:
                 _host = prepare_url(_host)
-                parsed_url = urlparse.urlparse(_host)
+                parsed_url = urlparse(_host)
                 _ip = yield client.getHostByName(parsed_url.netloc)
 
             clients_list[_ip] = {'host': _host, 'user': _user, 'pass': _pass}
@@ -87,7 +87,7 @@ def get_serve_uri(config):
     if not files_static_serve_path.endswith('/'):
         files_static_serve_path += '/'
 
-    return urlparse.urljoin(base_url, files_static_serve_path)
+    return urljoin(base_url, files_static_serve_path)
 
 
 def get_file_path(filename, base_path):
